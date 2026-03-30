@@ -62,7 +62,7 @@ async def import_translations(
                 if trans_key is None:
                     trans_key = TranslationKey(
                         id=uuid.uuid4(), namespace_id=namespace.id,
-                        key=key_str, is_active=True,
+                        key=key_str, is_active=True, description="",
                     )
                     db.add(trans_key)
                     await db.flush()
