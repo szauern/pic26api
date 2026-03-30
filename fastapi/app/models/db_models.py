@@ -2,7 +2,7 @@
 SQLAlchemy tükörmodellek a Django által létrehozott táblákhoz.
 FastAPI csak olvas ezekből (kivéve metrics táblákat).
 """
-from datetime import datetime, date
+from datetime import datetime, date, timezone
 from uuid import UUID
 from sqlalchemy import (
     JSON, String, Boolean, Text, Integer, BigInteger,
@@ -71,6 +71,8 @@ class TranslationKey(Base):
     key: Mapped[str] = mapped_column(String(500))
     description: Mapped[str] = mapped_column(Text, default="")
     is_active: Mapped[bool] = mapped_column(Boolean)
+    created_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), default=lambda: datetime.now(timezone.utc))
     namespace: Mapped["TranslationNamespace"] = relationship("TranslationNamespace", back_populates="keys")
     translations: Mapped[list["Translation"]] = relationship("Translation", back_populates="translation_key")
 
@@ -83,8 +85,10 @@ class Translation(Base):
     # Django ForeignKey -> language_id oszlopnév a DB-ben
     language_id: Mapped[str] = mapped_column(CHAR(5), ForeignKey("translations_language.code"))
     value: Mapped[str] = mapped_column(Text)
-    is_verified: Mapped[bool] = mapped_column(Boolean)
+    is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
     synced_at: Mapped[datetime | None] = mapped_column(TIMESTAMP(timezone=True), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), default=lambda: datetime.now(timezone.utc))
+    updated_at: Mapped[datetime] = mapped_column(TIMESTAMP(timezone=True), default=lambda: datetime.now(timezone.utc))
     translation_key: Mapped["TranslationKey"] = relationship("TranslationKey", back_populates="translations")
 
 
