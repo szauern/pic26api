@@ -69,6 +69,7 @@ class TranslationKey(Base):
     id: Mapped[UUID] = mapped_column(PGUUID(as_uuid=True), primary_key=True)
     namespace_id: Mapped[UUID] = mapped_column(ForeignKey("translations_namespace.id"))
     key: Mapped[str] = mapped_column(String(500))
+    description: Mapped[str] = mapped_column(Text, default="")
     is_active: Mapped[bool] = mapped_column(Boolean)
     namespace: Mapped["TranslationNamespace"] = relationship("TranslationNamespace", back_populates="keys")
     translations: Mapped[list["Translation"]] = relationship("Translation", back_populates="translation_key")
