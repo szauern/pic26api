@@ -28,6 +28,7 @@ class ImportResult(BaseModel):
     updated: int
     errors: int
     cache_invalidated: int
+    error_details: list = []
 
 
 @router.post("/translations/import", response_model=ImportResult)
@@ -103,4 +104,5 @@ async def import_translations(
         updated=updated,
         errors=errors,
         cache_invalidated=cache_deleted,
+        error_details=error_details,
     )
